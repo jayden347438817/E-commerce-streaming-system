@@ -1,7 +1,15 @@
 package com.bupt.ecommercestreamingsystem.sys.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.bupt.ecommercestreamingsystem.common.vo.Result;
+import com.bupt.ecommercestreamingsystem.sys.entity.Users;
+import com.bupt.ecommercestreamingsystem.sys.service.IUsersService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -11,8 +19,47 @@ import org.springframework.stereotype.Controller;
  * @author Jayden
  * @since 2023-05-25
  */
-@Controller
+@RestController
 @RequestMapping("/users")
 public class UsersController {
+    @Autowired
+    private IUsersService usersService;
+
+    @Cacheable(value = "user",key = "#token")
+    @GetMapping("/info")
+    public Result<Map<String,Object>> getUserInfo(@RequestParam("token") String token){
+        // 根据token获取用户信息,redis
+        Map<String,Object> data = usersService.getUserInfo(token);
+        if(data != null){
+            return Result.success(data,"获取用户信息成功");
+        }
+        return Result.fail(20003,"登录信息无效，请重新登录");
+    }
+
+    @CacheEvict(value = "user", key = "#token")
+    @PostMapping("/logout")
+    public Result<?> logout(@RequestParam("token") String token){
+        // SpringCache
+
+        usersService.logout(token);
+        return Result.success(null,"退出成功");
+    }
+    @PostMapping("/login")
+    public Result<Map<String,Object>> login(Users user){
+        Map<String,Object> data = usersService.login(user);
+        if (data != null){
+            return Result.success(data,"登录成功");
+        }
+        return Result.fail(20002,"用户名或密码错误");
+    }
+    @PostMapping("/register")
+    public Result<?> register(@RequestBody Users user){
+        boolean flag = usersService.register(user);
+        if(flag){
+            return Result.success("注册成功");
+        }
+        return Result.fail(20003,"注册失败");
+    }
+
 
 }

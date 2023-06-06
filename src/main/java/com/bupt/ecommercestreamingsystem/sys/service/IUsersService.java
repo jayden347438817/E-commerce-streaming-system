@@ -3,6 +3,8 @@ package com.bupt.ecommercestreamingsystem.sys.service;
 import com.bupt.ecommercestreamingsystem.sys.entity.Users;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.Map;
+
 /**
  * <p>
  *  服务类
@@ -13,4 +15,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IUsersService extends IService<Users> {
 
+    Map<String, Object> login(Users user);
+
+    Map<String, Object> getUserInfo(String token);
+
+    void logout(String token);
+
+    boolean register(Users user);
 }
