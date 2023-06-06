@@ -25,6 +25,7 @@ public class UsersController {
     @Autowired
     private IUsersService usersService;
 
+    // 获取用户信息
     @Cacheable(value = "user",key = "#token")
     @GetMapping("/info")
     public Result<Map<String,Object>> getUserInfo(@RequestParam("token") String token){
@@ -36,6 +37,7 @@ public class UsersController {
         return Result.fail(20003,"登录信息无效，请重新登录");
     }
 
+    // 注销
     @CacheEvict(value = "user", key = "#token")
     @PostMapping("/logout")
     public Result<?> logout(@RequestParam("token") String token){
@@ -44,6 +46,8 @@ public class UsersController {
         usersService.logout(token);
         return Result.success(null,"退出成功");
     }
+
+    // 登录
     @PostMapping("/login")
     public Result<Map<String,Object>> login(Users user){
         Map<String,Object> data = usersService.login(user);
@@ -52,6 +56,8 @@ public class UsersController {
         }
         return Result.fail(20002,"用户名或密码错误");
     }
+
+    // 注册
     @PostMapping("/register")
     public Result<?> register(@RequestBody Users user){
         boolean flag = usersService.register(user);

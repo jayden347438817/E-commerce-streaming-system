@@ -4,10 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data//生成get set方法
 @NoArgsConstructor//生成无参构造方法
 @AllArgsConstructor//生成有参构造方法
-public class Result<T> {//泛型类
+public class Result<T> implements Serializable {//泛型类
+    private static final long serialVersionUID = 1L;//序列化id
     private Integer code;
     private String message;
     private T data;
