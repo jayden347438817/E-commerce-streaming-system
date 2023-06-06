@@ -1,6 +1,5 @@
 package com.bupt.ecommercestreamingsystem.sys.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.bupt.ecommercestreamingsystem.common.vo.Result;
 import com.bupt.ecommercestreamingsystem.sys.service.IProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +7,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.stereotype.Controller;
 
 import java.util.List;
 import java.util.Map;
@@ -38,12 +36,12 @@ public class ProductsController {
     }
 
     // 获取商品信息
-    @Cacheable(value = "product",key = "#productId")
     @GetMapping("/{productId}")
-    public Result<?> getProductById(@PathVariable("productId") Integer productId){
-        Map<String,Object> data = productsService.getProductById(productId);
+    public Result<?> getProductById(@PathVariable("productId") Integer productId,
+                                    @RequestParam(value = "token") String token){
+        Map<String,Object> data = productsService.getProductById(productId,token);
         if (data == null){
-            return Result.fail(20004,"该商品不存在");
+            return Result.fail(20004,"该商品不存在，或者您不具备权限");
         }
         return Result.success(data,"获取商品成功");
     }
@@ -59,23 +57,30 @@ public class ProductsController {
     }
 
     // 修改商品信息
-    @CachePut(value = "product",key = "#productId")
     @PutMapping("/{productId}")
     public Result<?> updateProduct(@PathVariable(value = "productId") Integer productId,
                                    @RequestParam(value = "ownerId",required = false) Integer ownerId,
                                    @RequestParam(value = "name",required = false) String name,
                                    @RequestParam(value = "description",required = false) String description,
-                                   @RequestParam(value = "quantity",required = false) Integer quantity){
+                                   @RequestParam(value = "quantity",required = false) Integer quantity,
+                                   @RequestParam(value = "token") String token){
+        Map<String,Object> data = productsService.getProductById(productId, token);
+        if (data == null){
+            return Result.fail(20004,"该商品不存在或者您不具备权限");
+        }
         productsService.updateProduct(productId,ownerId,name,description,quantity);
-        Map<String,Object> data = productsService.getProductById(productId);
+        data = productsService.getProductById(productId,token);
         return Result.success(data,"修改商品信息成功");
     }
 
     // 删除商品
-    @CacheEvict(value = "product",key = "#productId")
     @DeleteMapping("/{productId}")
-    public Result<?> deleteProduct(@PathVariable("productId") Integer productId){
-        productsService.deleteProduct(productId);
+    public Result<?> deleteProduct(@PathVariable("productId") Integer productId,
+                                   @RequestParam("token") String token){
+        String message = productsService.deleteProduct(productId,token);
+        if (message == null){
+            return Result.fail(20004,"该商品不存在或者您不具备权限");
+        }
         return Result.success("删除商品成功");
     }
 

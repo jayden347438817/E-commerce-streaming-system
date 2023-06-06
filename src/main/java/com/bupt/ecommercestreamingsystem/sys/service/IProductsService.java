@@ -18,11 +18,11 @@ public interface IProductsService extends IService<Products> {
 
     Map<String, Object> addProduct(Integer ownerId, String name, String description, Integer quantity);
 
-    Map<String, Object> getProductById(Integer productId);
+    Map<String, Object> getProductById(Integer productId, String token);
 
     List<?> getAllProducts();
 
     void updateProduct(Integer productId, Integer ownerId, String name, String description, Integer quantity);
 
-    void deleteProduct(Integer productId);
+    String deleteProduct(Integer productId, String token);
 }

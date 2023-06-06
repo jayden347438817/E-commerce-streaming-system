@@ -1,10 +1,13 @@
 package com.bupt.ecommercestreamingsystem.sys.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.alibaba.fastjson2.JSON;
 import com.bupt.ecommercestreamingsystem.sys.entity.Products;
+import com.bupt.ecommercestreamingsystem.sys.entity.Users;
 import com.bupt.ecommercestreamingsystem.sys.mapper.ProductsMapper;
 import com.bupt.ecommercestreamingsystem.sys.service.IProductsService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -22,6 +25,9 @@ import java.util.Map;
 @Service
 public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products> implements IProductsService {
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     @Override
     public Map<String, Object> addProduct(Integer ownerId, String name, String description, Integer quantity) {
         Products products = new Products();
@@ -36,9 +42,21 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products> i
     }
 
     @Override
-    public Map<String, Object> getProductById(Integer productId) {
+    public Map<String, Object> getProductById(Integer productId, String token) {
+        // 从redis中获取用户信息
+        Object obj = redisTemplate.opsForValue().get(token);
+        // 判断用户是否登录
+        if (obj == null) {
+            return null;
+        }
+        // 反序列化（用fastjson）
+        Users loginUser = JSON.parseObject(JSON.toJSONString(obj),Users.class);
         Products products = this.getById(productId);
         if (products == null) {
+            return null;
+        }
+        // 判断用户是否有权限,只能查看自己的商品
+        if (!loginUser.getId().equals(this.getById(productId).getOwnerId())) {
             return null;
         }
         Map<String,Object> data = new HashMap<>();
@@ -68,8 +86,21 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products> i
     }
 
     @Override
-    public void deleteProduct(Integer productId) {
+    public String deleteProduct(Integer productId, String token) {
+        // 从redis中获取用户信息
+        Object obj = redisTemplate.opsForValue().get(token);
+        // 判断用户是否登录
+        if (obj == null) {
+            return null;
+        }
+        // 反序列化（用fastjson）
+        Users loginUser = JSON.parseObject(JSON.toJSONString(obj),Users.class);
+        // 判断用户是否有权限,只能删除自己的商品
+        if (!loginUser.getId().equals(this.getById(productId).getOwnerId())) {
+            return null;
+        }
         this.removeById(productId);
+        return("删除成功");
     }
 
 
