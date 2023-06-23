@@ -13,4 +13,16 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ILiveRoomsService extends IService<LiveRooms> {
 
+    String createLiveRoom(Integer ownerId, String name, String description);
+
+    String deleteLiveRoom(Integer liveRoomId);
+
+
+    String enterLiveRoom(Integer liveRoomId, Integer userId);
+
+    String exitLiveRoom(Integer liveRoomId, Integer userId);
+
+    int getOnlineUsers(Integer liveRoomId);
+
+    int getMaxOnlineUsers(Integer liveRoomId);
 }
