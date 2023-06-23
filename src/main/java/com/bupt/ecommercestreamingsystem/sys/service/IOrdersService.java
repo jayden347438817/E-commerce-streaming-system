@@ -13,4 +13,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IOrdersService extends IService<Orders> {
 
+    void createOrder(Integer userId, Integer productId, Integer quantity);
+
+
+    void cancelOrder(Integer orderId);
+
+    void payOrder(Integer orderId);
 }

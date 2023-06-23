@@ -28,6 +28,7 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products> i
     @Autowired
     private RedisTemplate redisTemplate;
 
+    // 添加商品
     @Override
     public Map<String, Object> addProduct(Integer ownerId, String name, String description, Integer quantity) {
         Products products = new Products();
@@ -41,6 +42,7 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products> i
         return data;
     }
 
+    // 删除商品，并利用redis的token验证用户身份
     @Override
     public Map<String, Object> getProductById(Integer productId, String token) {
         // 从redis中获取用户信息

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * @author Jayden
  * @since 2023-05-25
  */
-@TableName("products")
+@TableName("orders")
 public class Orders implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -33,7 +33,6 @@ public class Orders implements Serializable {
 
     private LocalDateTime timestamp;
 
-    private Boolean ispayed;
 
     public Integer getId() {
         return id;
@@ -77,13 +76,7 @@ public class Orders implements Serializable {
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
-    public Boolean getIspayed() {
-        return ispayed;
-    }
 
-    public void setIspayed(Boolean ispayed) {
-        this.ispayed = ispayed;
-    }
 
     @Override
     public String toString() {
@@ -94,7 +87,6 @@ public class Orders implements Serializable {
             ", quantity=" + quantity +
             ", status=" + status +
             ", timestamp=" + timestamp +
-            ", ispayed=" + ispayed +
         "}";
     }
 }
