@@ -17,6 +17,14 @@ spring:
   web:
     resources:
       static-locations: classpath:/templates/
+  application:
+    name: nacos-e-commerce
+    cloud:
+      nacos:
+        discovery:
+          username: nacos
+          password: nacos
+          server-addr: 127.0.0.1:8848
 
 logging:
   level:

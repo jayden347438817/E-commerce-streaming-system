@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2023-05-25
  */
 @Controller
-@RequestMapping("/liveRoomMessages")
+@RequestMapping("/chat")
 public class LiveRoomMessagesController {
-    @GetMapping("/1")
+    @GetMapping("/{live_room_id}")
     public String getLiveRoomMessages(){
         return "chat";
     }
