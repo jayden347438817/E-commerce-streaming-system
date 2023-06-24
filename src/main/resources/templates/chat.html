@@ -2,15 +2,15 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>WebSocket Test</title>
+    <title>直播间聊天室</title>
 </head>
 <body>
-<h1>WebSocket Test</h1>
+<h1>直播间聊天室</h1>
 <div id="app">
     <ul id="messages"></ul>
 
     <input id="messageInput" type="text">
-    <button id="sendButton">Send</button>
+    <button id="sendButton">发送</button>
 </div>
 <script>
     // 创建一个WebSocket连接
@@ -50,6 +50,73 @@
         messageInput.value = '';
     });
 
+    // 设置按下回车键时的行为
+    document.getElementById('messageInput').addEventListener('keydown', function(event) {
+        if (event.keyCode === 13) {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value;
+            socket.send(message);
+            messageInput.value = '';
+        }
+    });
+
 </script>
 </body>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f0f0;
+    }
+    h1 {
+        color: #333;
+        text-align: center;
+        margin-top: 100px;
+    }
+    #app {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 80vh;
+    }
+    #messages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow-y: auto;
+        height: 50vh;
+        width: 50%;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 20px;
+        background-color: #fff;
+    }
+    #messages li {
+        padding: 5px 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        background-color: #ddd;
+    }
+    #messageInput {
+        width: 50%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+    }
+    #sendButton {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        background-color: #007bff;
+        cursor: pointer;
+    }
+    #sendButton:hover {
+        background-color: #0056b3;
+    }
+</style>
 </html>
