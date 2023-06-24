@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Test</title>
+</head>
+<body>
+<h1>WebSocket Test</h1>
+<div id="app">
+    <ul id="messages"></ul>
+
+    <input id="messageInput" type="text">
+    <button id="sendButton">Send</button>
+</div>
+<script>
+    // 创建一个WebSocket连接
+    const socket = new WebSocket('ws://10.28.204.52:1234/websocket');
+
+    // 当WebSocket连接打开时，会触发这个函数
+    socket.onopen = function(event) {
+        console.log('Connected to server');
+    };
+
+    // 当收到服务器的消息时，这个函数会被触发
+    socket.onmessage = function(event) {
+        console.log('Message from server: ', event.data);
+
+        // 将服务器发送过来的消息添加到网页上
+        const messages = document.getElementById('messages');// 获取id为messages的元素
+        const li = document.createElement('li');// 创建一个li元素
+        li.appendChild(document.createTextNode(event.data));// 将服务器发送过来的消息添加到li元素上
+        messages.appendChild(li);// 将li元素添加到id为messages的元素上
+    };
+
+    // 当WebSocket连接关闭时，会触发这个函数
+    socket.onclose = function(event) {
+        console.log('Disconnected from server');
+    };
+
+    // 当发生错误时，会触发这个函数
+    socket.onerror = function(event) {
+        console.error('WebSocket error: ', event);
+    };
+
+    // 设置点击发送按钮时的行为
+    document.getElementById('sendButton').addEventListener('click', function() {
+        const messageInput = document.getElementById('messageInput');
+        const message = messageInput.value;
+        socket.send(message);
+        messageInput.value = '';
+    });
+
+</script>
+</body>
+</html>
