@@ -1,0 +1,26 @@
+server:
+  port: 71
+
+spring:
+  application:
+    name: e-commerce-gateway
+  cloud:
+    nacos:
+      discovery:
+        username: nacos
+        password: nacos
+        server-addr: 127.0.0.1:8848
+        namespace: public
+    gateway:
+      routes:
+        - id: gateway
+          uri: lb://e-commerce
+          predicates:
+            - Path=/**
+
+
+logging:
+  level:
+    org.springframework.cloud.gateway: trace
+    org.springframework.cloud.loadbalancer: trace
+    org.springframework.web.reactive: trace
