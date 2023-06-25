@@ -8,6 +8,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArrayList;
+// WebSocket处理器
 @Component
 public class WebSocketHandler extends TextWebSocketHandler {
     // 使用一个线程安全的集合来存储 WebSocketSession
