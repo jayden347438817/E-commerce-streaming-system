@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>
@@ -29,7 +31,7 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
 
     // 创建订单
     @Override
-    public void createOrder(Integer userId, Integer productId, Integer count) {
+    public Map<String,Object> createOrder(Integer userId, Integer productId, Integer count) {
         Orders orders = new Orders();
         orders.setUserId(userId);
         orders.setProductId(productId);
@@ -41,6 +43,14 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         orderSender.sendOrder(orders);
         // 发送延迟消息 5min
         orderSender.sendDelayOrder(orders, 1000 * 60 * 5);
+        Map<String,Object> data = new HashMap<>();
+        data.put("id",orders.getId());
+        data.put("userId",orders.getUserId());
+        data.put("productId",orders.getProductId());
+        data.put("quantity",orders.getQuantity());
+        data.put("status",orders.getStatus());
+        data.put("timestamp",orders.getTimestamp());
+        return data;
     }
 
     // 撤销订单
@@ -54,7 +64,7 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
 
     // 支付订单
     @Override
-    public void payOrder(Integer orderId) {
+    public String payOrder(Integer orderId) {
         Orders orders = this.getById(orderId);
         if (orders != null && orders.getStatus().equals("待支付")){// 订单存在且未支付
             // 订单不能重复支付，通过订单状态判断实现
@@ -64,10 +74,13 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
             Products products = productsService.getById(orders.getProductId());
             products.setQuantity(products.getQuantity() - orders.getQuantity());
             productsService.updateById(products);
+            return "订单已支付";
         } else {
             System.out.println("订单不存在或已支付");
+            if (orders == null){
+                return "订单不存在";
+            }
+            return "订单已支付，不能重复支付";
         }
     }
-
-
 }

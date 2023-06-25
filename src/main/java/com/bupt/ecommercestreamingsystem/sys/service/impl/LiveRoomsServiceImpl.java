@@ -10,6 +10,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>
@@ -27,14 +29,20 @@ public class LiveRoomsServiceImpl extends ServiceImpl<LiveRoomsMapper, LiveRooms
 
     // 创建直播间
     @Override
-    public String createLiveRoom(Integer ownerId, String name, String description) {
+    public Map<String,Object> createLiveRoom(Integer ownerId, String name, String description) {
         LiveRooms liveRooms = new LiveRooms();
         liveRooms.setOwnerId(ownerId);
         liveRooms.setName(name);
         liveRooms.setDescription(description);
         liveRooms.setTimestamp(LocalDateTime.now());
         this.save(liveRooms);
-        return "创建直播间成功";
+        Map<String,Object> data = new HashMap<>();
+        data.put("liveRoomId",liveRooms.getId());
+        data.put("ownerId",liveRooms.getOwnerId());
+        data.put("name",liveRooms.getName());
+        data.put("description",liveRooms.getDescription());
+        data.put("timestamp",liveRooms.getTimestamp());
+        return data;
     }
 
     // 删除直播间
@@ -87,6 +95,7 @@ public class LiveRoomsServiceImpl extends ServiceImpl<LiveRoomsMapper, LiveRooms
         return "进入直播间成功";
     }
 
+    // 退出直播间
     @Override
     public String exitLiveRoom(Integer liveRoomId, Integer userId) {
         // 判断直播间是否存在
@@ -108,6 +117,7 @@ public class LiveRoomsServiceImpl extends ServiceImpl<LiveRoomsMapper, LiveRooms
         return "退出直播间成功";
     }
 
+    // 获取在线用户数量
     @Override
     public int getOnlineUsers(Integer liveRoomId) {
         // 判断直播间是否存在
@@ -130,6 +140,7 @@ public class LiveRoomsServiceImpl extends ServiceImpl<LiveRoomsMapper, LiveRooms
         return count;
     }
 
+    // 获取历史最大在线人数
     @Override
     public int getMaxOnlineUsers(Integer liveRoomId) {
         String maxKey = "liveRoom:" + liveRoomId + ":max";
@@ -139,6 +150,4 @@ public class LiveRoomsServiceImpl extends ServiceImpl<LiveRoomsMapper, LiveRooms
         }
         return maxCount;
     }
-
-
 }

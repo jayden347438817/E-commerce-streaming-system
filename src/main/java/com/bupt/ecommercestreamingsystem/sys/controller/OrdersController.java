@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * <p>
  *  前端控制器
@@ -26,8 +29,8 @@ public class OrdersController {
     public Result<?> createOrder(@RequestParam("userId") Integer userId,
                                  @RequestParam("productId") Integer productId,
                                  @RequestParam("quantity") Integer quantity){
-        ordersService.createOrder(userId,productId,quantity);//创建订单并使用消息队列发送订单
-        return Result.success("创建订单成功");
+        Map<String,Object> data = ordersService.createOrder(userId,productId,quantity);//创建订单并使用消息队列发送订单
+        return Result.success(data,"创建订单成功");
     }
 
     //查询订单
@@ -37,7 +40,7 @@ public class OrdersController {
         if (orders == null){
             return Result.fail("订单不存在");
         }
-        return Result.success(orders);
+        return Result.success(orders,"查询订单成功");
     }
 
     //撤销未支付订单
@@ -45,20 +48,23 @@ public class OrdersController {
     public Result<?> cancelOrder(@PathVariable("orderId") Integer orderId){
         ordersService.cancelOrder(orderId);
         Orders orders = ordersService.getById(orderId);
+        Map<String,Object> data = new HashMap<>();
+        data.put("orderId",orderId);
         if (orders == null){
             return Result.fail("订单不存在");
         }
         if (orders.getStatus().equals("已支付")){
             return Result.fail("订单已支付，无法撤销");
         }
-        return Result.success("撤销订单成功");
+        return Result.success(data,"撤销订单成功");
     }
 
     //支付订单
     @PostMapping("/pay")
     public Result<?> payOrder(@RequestParam("orderId") Integer orderId){
-        ordersService.payOrder(orderId);
-        return Result.success("支付订单成功");
+        Map<String,Object> data = new HashMap<>();
+        data.put("orderId",orderId);
+        return Result.success(data,ordersService.payOrder(orderId));
     }
 
 }

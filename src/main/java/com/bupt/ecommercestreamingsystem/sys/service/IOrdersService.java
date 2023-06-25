@@ -3,6 +3,8 @@ package com.bupt.ecommercestreamingsystem.sys.service;
 import com.bupt.ecommercestreamingsystem.sys.entity.Orders;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.Map;
+
 /**
  * <p>
  *  服务类
@@ -13,10 +15,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IOrdersService extends IService<Orders> {
 
-    void createOrder(Integer userId, Integer productId, Integer quantity);
+    Map<String,Object> createOrder(Integer userId, Integer productId, Integer quantity);
 
 
     void cancelOrder(Integer orderId);
 
-    void payOrder(Integer orderId);
+    String payOrder(Integer orderId);
 }

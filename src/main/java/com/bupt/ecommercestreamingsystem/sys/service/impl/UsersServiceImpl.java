@@ -27,6 +27,8 @@ import java.util.concurrent.TimeUnit;
 public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements IUsersService {
     @Autowired
     private RedisTemplate redisTemplate;
+
+    // 登录
     @Override
     public Map<String, Object> login(Users user) {
         // 根据用户名密码查询，不为空就生成token
@@ -48,6 +50,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         return null;
     }
 
+    // 获取用户信息
     @Override
     public Map<String, Object> getUserInfo(String token) {
         // 根据token获取用户信息,redis
@@ -64,12 +67,13 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         return null;
     }
 
+    // 注销
     @Override
     public void logout(String token) {
         redisTemplate.delete(token);
     }
 
-    //注册
+    // 注册
     @Override
     public boolean register(Users user) {
         //根据用户名查询

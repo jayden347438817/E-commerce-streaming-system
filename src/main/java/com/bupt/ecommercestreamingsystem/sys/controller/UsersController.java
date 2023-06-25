@@ -41,8 +41,6 @@ public class UsersController {
     @CacheEvict(value = "user", key = "#token")
     @PostMapping("/logout")
     public Result<?> logout(@RequestParam("token") String token){
-        // SpringCache
-
         usersService.logout(token);
         return Result.success(null,"退出成功");
     }
@@ -64,7 +62,7 @@ public class UsersController {
         if(flag){
             return Result.success("注册成功");
         }
-        return Result.fail(20003,"注册失败");
+        return Result.fail(20003,"注册失败，用户可能已存在");
     }
 
 

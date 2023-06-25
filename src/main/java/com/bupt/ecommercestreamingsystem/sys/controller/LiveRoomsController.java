@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * <p>
  *  前端控制器
@@ -26,7 +29,11 @@ public class LiveRoomsController {
     public Result<?> createLiveRoom(@RequestParam("ownerId") Integer ownerId,
                                     @RequestParam("name") String name,
                                     @RequestParam("description") String description){
-        return Result.success(liveRoomsService.createLiveRoom(ownerId,name,description));
+        Map<String,Object> data = liveRoomsService.createLiveRoom(ownerId,name,description);
+        if (data != null){
+            return Result.success(data,"创建直播间成功");
+        }
+        return Result.fail("创建直播间失败");
     }
 
     // 删除直播间

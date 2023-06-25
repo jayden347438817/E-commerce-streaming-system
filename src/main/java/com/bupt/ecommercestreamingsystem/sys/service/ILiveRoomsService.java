@@ -3,6 +3,8 @@ package com.bupt.ecommercestreamingsystem.sys.service;
 import com.bupt.ecommercestreamingsystem.sys.entity.LiveRooms;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.Map;
+
 /**
  * <p>
  *  服务类
@@ -13,7 +15,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ILiveRoomsService extends IService<LiveRooms> {
 
-    String createLiveRoom(Integer ownerId, String name, String description);
+    Map<String,Object> createLiveRoom(Integer ownerId, String name, String description);
 
     String deleteLiveRoom(Integer liveRoomId);
 

@@ -39,6 +39,10 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products> i
         this.save(products);
         Map<String,Object> data = new HashMap<>();
         data.put("id",products.getId());
+        data.put("ownerId",products.getOwnerId());
+        data.put("name",products.getName());
+        data.put("description",products.getDescription());
+        data.put("quantity",products.getQuantity());
         return data;
     }
 
@@ -70,12 +74,14 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products> i
         return data;
     }
 
+    // 获取全部商品列表
     @Override
     public List<?> getAllProducts() {
         List<Products> products = this.list();
         return products;
     }
 
+    // 更新商品信息
     @Override
     public void updateProduct(Integer productId, Integer ownerId, String name, String description, Integer quantity) {
         Products products = new Products();
@@ -87,6 +93,7 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products> i
         this.updateById(products);
     }
 
+    // 删除商品
     @Override
     public String deleteProduct(Integer productId, String token) {
         // 从redis中获取用户信息
@@ -104,6 +111,4 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products> i
         this.removeById(productId);
         return("删除成功");
     }
-
-
 }

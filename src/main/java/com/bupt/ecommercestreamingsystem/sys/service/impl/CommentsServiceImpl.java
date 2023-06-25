@@ -23,6 +23,7 @@ import java.util.List;
 @Service
 public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> implements ICommentsService {
 
+    // 增加评论
     @Override
     public void addComment(Integer userId, Integer productId, String content) {
         Comments comments = new Comments();
@@ -34,6 +35,7 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
         this.save(comments);
     }
 
+    // 按Id获取评论
     @Override
     public List<?> getCommentsByProductId(Integer productId) {
         LambdaQueryWrapper<Comments> wrapper = new LambdaQueryWrapper<>();
