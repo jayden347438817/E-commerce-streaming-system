@@ -46,7 +46,7 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products> i
         return data;
     }
 
-    // 删除商品，并利用redis的token验证用户身份
+    // 查询商品信息，并利用redis的token验证用户身份
     @Override
     public Map<String, Object> getProductById(Integer productId, String token) {
         // 从redis中获取用户信息
@@ -100,7 +100,11 @@ public class ProductsServiceImpl extends ServiceImpl<ProductsMapper, Products> i
         Object obj = redisTemplate.opsForValue().get(token);
         // 判断用户是否登录
         if (obj == null) {
-            return null;
+            return "你还没登录，或者登录过期";
+        }
+        Products product = this.getById(productId);
+        if (product == null){
+            return "商品不存在";
         }
         // 反序列化（用fastjson）
         Users loginUser = JSON.parseObject(JSON.toJSONString(obj),Users.class);

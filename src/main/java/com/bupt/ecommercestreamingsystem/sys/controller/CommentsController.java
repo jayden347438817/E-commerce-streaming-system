@@ -30,8 +30,8 @@ public class CommentsController {
     public Result<?> addComment(@RequestParam("userId") Integer userId,
                                 @RequestParam("productId") Integer productId,
                                 @RequestParam("content") String content){
-        commentsService.addComment(userId,productId,content);
-        return Result.success("评论成功");
+        Map<String,Object> data = commentsService.addComment(userId,productId,content);
+        return Result.success(data,"评论成功");
     }
 
     // 获取商品评论

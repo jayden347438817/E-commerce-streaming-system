@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import java.sql.Wrapper;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -25,7 +27,7 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
 
     // 增加评论
     @Override
-    public void addComment(Integer userId, Integer productId, String content) {
+    public Map<String,Object> addComment(Integer userId, Integer productId, String content) {
         Comments comments = new Comments();
         comments.setUserId(userId);
         comments.setProductId(productId);
@@ -33,6 +35,13 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
         LocalDateTime localDateTime = LocalDateTime.now();
         comments.setTimestamp(localDateTime);
         this.save(comments);
+        Map<String,Object> data = new HashMap<>();
+        data.put("id",comments.getId());
+        data.put("userId",comments.getUserId());
+        data.put("productId",comments.getProductId());
+        data.put("content",comments.getContent());
+        data.put("localDateTime",comments.getTimestamp());
+        return data;
     }
 
     // 按Id获取评论

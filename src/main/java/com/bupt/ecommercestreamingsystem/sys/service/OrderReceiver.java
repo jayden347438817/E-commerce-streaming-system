@@ -26,8 +26,8 @@ public class OrderReceiver {
         int productId = order.getProductId();
         int quantity = order.getQuantity();
         Products product = productsService.getById(productId);
-        if (product.getQuantity() < quantity) {
-            ordersService.cancelOrder(order.getId());
+        if (product.getQuantity() < quantity) {// 库存不足
+            ordersService.cancelOrder(order.getId());// 调用撤销订单的方法
         }
     }
 

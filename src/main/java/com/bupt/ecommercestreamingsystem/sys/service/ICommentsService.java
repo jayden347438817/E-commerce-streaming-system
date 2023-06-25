@@ -4,6 +4,7 @@ import com.bupt.ecommercestreamingsystem.sys.entity.Comments;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public interface ICommentsService extends IService<Comments> {
 
-    void addComment(Integer userId, Integer productId, String content);
+    Map<String,Object> addComment(Integer userId, Integer productId, String content);
 
     List<?> getCommentsByProductId(Integer productId);
 }

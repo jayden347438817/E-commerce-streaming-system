@@ -78,10 +78,7 @@ public class ProductsController {
     public Result<?> deleteProduct(@PathVariable("productId") Integer productId,
                                    @RequestParam("token") String token){
         String message = productsService.deleteProduct(productId,token);
-        if (message == null){
-            return Result.fail(20004,"该商品不存在或者您不具备权限");
-        }
-        return Result.success("删除商品成功");
+        return Result.success(message);
     }
 
 }
